@@ -17,7 +17,7 @@ class AuthController extends GetxController{
       error.value = "";
       final newUser = await _apiService.register(name, email, password, passwordConfirmation);
       _currentUser.value = newUser;
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/navigation');
     } catch(e){
       error.value = e.toString();
     }finally{
@@ -31,7 +31,7 @@ class AuthController extends GetxController{
       error.value = "";
       final newUser = await _apiService.login(email, password);
       _currentUser.value = newUser;
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/navigation');
     } catch(e){
       error.value = e.toString();
     }finally{

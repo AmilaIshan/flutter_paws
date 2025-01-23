@@ -1,5 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:paws/models/category_entity.dart';
 import 'dart:convert';
 
 import 'package:paws/models/user.dart';
@@ -112,6 +113,24 @@ class ApiService {
     }catch(e){
       print('Error logging user: $e');
       throw _handleError(e);
+    }
+  }
+
+  Future<List<CategoryEntity>> fetchCategory() async{
+    final url = Uri.parse('$baseUrl/category');
+    final header = await _getHeaders();
+    final csrfToken = await _getCsrfToken();
+    if(csrfToken != null){
+      header['X-XSRF-TOKEN'] = csrfToken;
+    }
+
+    final response = await http.get(url, headers: header);
+    if(response.statusCode == 200){
+      final decodedResponse =jsonDecode(response.body);
+      final List<dynamic> data = decodedResponse['data'];
+      return data.map((json) => CategoryEntity.fromJson(json)).toList();
+    }else{
+      throw _handleError(response);
     }
   }
 

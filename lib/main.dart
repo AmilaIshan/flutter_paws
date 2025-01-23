@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:paws/navigation/navigation.dart';
 import 'package:paws/screens/home.dart';
 import 'package:paws/screens/login_screen.dart';
 import 'package:paws/screens/register_screen.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/login', page: () => const LoginScreen()),
         GetPage(name: '/register', page: () => const RegisterScreen()),
         GetPage(name: '/home', page: () => const Home()),
+        GetPage(name: '/navigation', page: () => const Navigation())
       ],
       home: const LoginScreen(),
     );
