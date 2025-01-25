@@ -1,6 +1,7 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:paws/models/category_entity.dart';
+import 'package:paws/models/product_entity.dart';
 import 'dart:convert';
 
 import 'package:paws/models/user.dart';
@@ -133,6 +134,44 @@ class ApiService {
       throw _handleError(response);
     }
   }
+
+  Future<List<productEntity>> fetchProduct() async{
+    final url = Uri.parse('$baseUrl/products');
+    final header = await _getHeaders();
+    final csrfToken = await _getCsrfToken();
+    if(csrfToken != null){
+      header['X-XSRF-TOKEN'] = csrfToken;
+    }
+
+    final response = await http.get(url, headers: header);
+    if(response.statusCode == 200){
+      final decodedResponse = jsonDecode(response.body);
+      final List<dynamic> data = decodedResponse['data'];
+      return data.map((json) => productEntity.fromJson(json)).toList();
+    }else{
+      throw _handleError(response);
+    }
+  }
+
+  Future<List<productEntity>> fetchCategoryProducts(int categoryId) async{
+    final url = Uri.parse('$baseUrl/category/$categoryId');
+    final header = await _getHeaders();
+    final csrfToken = await _getCsrfToken();
+    if(csrfToken != null){
+      header['X-XSRF-TOKEN'] = csrfToken;
+    }
+
+    final response = await http.get(url, headers: header);
+    if(response.statusCode == 200){
+      final decodedResponse = jsonDecode(response.body);
+      final List<dynamic> data = decodedResponse['data'];
+      return data.map((json) => productEntity.fromJson(json)).toList();
+    }else{
+      throw _handleError(response);
+    }
+  }
+
+
 
   String _handleError(dynamic error){
     if(error is http.Response){

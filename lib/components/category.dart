@@ -21,7 +21,11 @@ class Category extends StatelessWidget {
           itemCount: _categoryController.categories.length,
           itemBuilder: (context, index){
             final category = _categoryController.categories[index];
-            return CategoryWidget(label: category.label, image: category.image);
+            return CategoryWidget(
+                label: category.label,
+                image: category.image,
+                id: category.id,
+            );
           }
       );
     });

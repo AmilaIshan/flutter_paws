@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paws/components/category.dart';
+import 'package:paws/components/product.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -13,14 +14,54 @@ class Home extends StatelessWidget {
           title: Text("Home page"),
           centerTitle: true,
         ),
-        body: Padding(
-            padding: const EdgeInsets.all(8.0),
+        body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(child: Text('Catgories', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),)),
-              SizedBox(height: 16,),
-              Expanded(child: Category())
+              Stack(
+                children: [
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/banner.png'),
+                        fit: BoxFit.cover
+                      )
+                    ),
+                  ),
+                  Positioned(
+                    top: 50,
+                    left: 20,
+                    child: Text(
+                      "Welcom to Paws",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "Categories",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                )
+              ),
+              SizedBox(
+                height: 160,
+                child: Category(),
+              ),
+              Product()
             ],
           ),
         ),
