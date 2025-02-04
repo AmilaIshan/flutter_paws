@@ -5,11 +5,12 @@ import 'package:paws/models/product_entity.dart';
 import 'dart:convert';
 
 import 'package:paws/models/user.dart';
+import 'package:paws/services/auth_service.dart';
 
 class ApiService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  //final String baseUrl = 'http://192.168.1.2:8000/api';
+  // final String baseUrl = 'http://192.168.1.2:8000/api';
   final String baseUrl = 'http://10.0.2.2:8000/api';
   Map<String, String> get _headers => {
     'Accept': 'application/json',
@@ -87,7 +88,7 @@ class ApiService {
     }
   }
 
-  Future<User> login(String email, String password) async{
+  Future<User> login(String email, String password, AuthService authService) async{
     try{
       final headers = await _getHeaders();
       final csrfToken = await _getCsrfToken();
@@ -106,6 +107,10 @@ class ApiService {
         final data = jsonDecode(response.body);
         final user = User.fromJson(data['user']);
         user.token = data['token'].toString();
+
+          authService.setUserName(data['user']['name']);
+        print("username");
+        print(data['user']['name']);
         await _storage.write(key: 'token', value: user.token);
         return user;
       }else{
@@ -170,6 +175,36 @@ class ApiService {
       throw _handleError(response);
     }
   }
+
+  Future<void> addToCart(int productId, int price, int quantity) async {
+    try {
+      final headers = await _getHeaders();
+      final csrfToken = await _getCsrfToken();
+      if (csrfToken != null) {
+        headers['X-XSRF-TOKEN'] = csrfToken;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/cart'),
+        headers: headers,
+        body: jsonEncode({
+          'product_id': productId,
+          'price': price,
+          'quantity': quantity,
+        }),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print('Product added to cart successfully!');
+      } else {
+        throw _handleError(response);
+      }
+    } catch (e) {
+      print('Error adding product to cart: $e');
+      throw _handleError(e);
+    }
+  }
+
 
 
 

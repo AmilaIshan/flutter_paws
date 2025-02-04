@@ -4,9 +4,14 @@ import 'package:paws/navigation/navigation.dart';
 import 'package:paws/screens/home.dart';
 import 'package:paws/screens/login_screen.dart';
 import 'package:paws/screens/register_screen.dart';
+import 'package:paws/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp( Provider(create: (BuildContext context){
+    return AuthService();
+  },
+    child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

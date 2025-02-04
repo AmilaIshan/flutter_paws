@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:paws/controllers/auth_controller.dart';
+import 'package:paws/services/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -77,10 +79,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     }else {
                       return ElevatedButton(
                           onPressed: () {
+                            final authService = context.read<AuthService>();
                             if (_formKey.currentState!.validate()) {
                               _authController.login(
                                   _emailController.text,
-                                  _passwordController.text
+                                  _passwordController.text,
+                                authService
                               );
                               print('clicked');
                             }

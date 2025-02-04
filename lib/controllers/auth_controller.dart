@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:paws/models/user.dart';
 import 'package:paws/services/api_service.dart';
+import 'package:paws/services/auth_service.dart';
 
 
 class AuthController extends GetxController{
@@ -25,11 +26,11 @@ class AuthController extends GetxController{
     }
   }
 
-  Future<void> login(String email, String password) async{
+  Future<void> login(String email, String password, AuthService authService) async{
     try{
       isLoading.value = true;
       error.value = "";
-      final newUser = await _apiService.login(email, password);
+      final newUser = await _apiService.login(email, password, authService);
       _currentUser.value = newUser;
       Get.offAllNamed('/navigation');
     } catch(e){

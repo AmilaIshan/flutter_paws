@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:paws/components/productDetailPage.dart';
 import 'package:paws/models/product_entity.dart';
+import 'package:paws/services/api_service.dart';
 
 class ProductWidget extends StatelessWidget {
   final productEntity product;
@@ -13,7 +14,7 @@ class ProductWidget extends StatelessWidget {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductDetailPage(product: product),
+              builder: (context) => ProductDetailPage(product: product, apiService: ApiService(),),
             )
         );
       },
@@ -24,7 +25,15 @@ class ProductWidget extends StatelessWidget {
             height: 150,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: Colors.orangeAccent[100]
+                color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(12.0),
@@ -32,7 +41,7 @@ class ProductWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.network(
-                    'https://www.petexpress.com.ph/cdn/shop/files/10178527-Whiskas-Junior-Mackerel-Wet-Cat-Food-80g-_14-pouches_-FRONT.jpg?v=1701663024',
+                    'http://10.0.2.2:8000/storage/${product.imageUrl}',
                     height: 150,
                     width: 150,
                     errorBuilder: (context, error, stackTrace){
@@ -56,8 +65,18 @@ class ProductWidget extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: (){
-                          print("Add to Cart Clicked");
+                        onPressed: () async{
+                          final apiService = ApiService();
+                          try {
+                            await apiService.addToCart(product.id, product.price, 1);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Product added to cart successfully!')),
+                            );
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Failed to add product to cart: $e')),
+                            );
+                          }
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
